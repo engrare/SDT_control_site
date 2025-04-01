@@ -1,4 +1,5 @@
-	var spd_opts = { //https://bernii.github.io/gauge.js/
+//Copyright 2025 Kaya Sertel & ENGRARE®. All Rights Reserved.
+var spd_opts = { //https://bernii.github.io/gauge.js/
 	  angle: -0.17, // The span of the gauge arc
 	  lineWidth: 0.19, // The line thickness
 	  radiusScale: 0.97, // Relative radius
