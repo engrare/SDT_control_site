@@ -86,6 +86,7 @@
 	<link rel="stylesheet" href="https://site-assets.fontawesome.com/releases/v6.4.2/css/all.css">
 	<link rel="stylesheet" href="https://site-assets.fontawesome.com/releases/v6.4.2/css/sharp-solid.css">
 	<link rel="stylesheet" href="https://site-assets.fontawesome.com/releases/v6.4.2/css/sharp-light.css">
+	<script src="https://bernii.github.io/gauge.js/dist/gauge.min.js"></script>
 <script src="files/myScript.js"></script>
 <link rel="stylesheet" href="files/myStyle.css">
 
@@ -138,17 +139,23 @@ window.logintofirebase = function logintofirebase(username, password) {
         // Signed in successfully
         const user = userCredential.user;
         console.log('Giriş başarılı:', user);
+		if(!is_html_loaded) {
+			if(replaceHtmlWithUpdatedContent()) {
+				is_html_loaded = true;
+			} else {
+				alert("Bir hata oluştu. Dosya Yüklenemedi.");
+			}
+		}
 		setCookie(logincookiename, logindata.username + "|" + logindata.password, 30);
 		is_login_ok = true;
-		openPage(1);
 
-		readData('github-api');
       })
       .catch((error) => {
         console.error('Giriş hatası:', error);
         alert('Giriş başarısız: ' + error.message);
       });
   }
+
 window.signoutfirebase = function signoutfirebase() {
 	signOut(auth)
 		.then(() => {
@@ -163,25 +170,49 @@ window.signoutfirebase = function signoutfirebase() {
 }
 
 window.readData = function readData(dataname) {
-	var DataRef = ref(database, dataname);
-	get(DataRef)
-	  .then((snapshot) => {
-		if (snapshot.exists()) {
-		  var redData = snapshot.val();
-		  console.log('Okunan veri:', redData);
-		  return redData;
-		} else {
-		  console.log('Veri bulunamadı.');
-		}
-	  })
-	  .catch((error) => {
-		console.error('Veri alma hatası:', error);
-	  });
-}
+  var DataRef = ref(database, dataname);
+  return get(DataRef)
+    .then((snapshot) => {
+      if (snapshot.exists()) {
+        return snapshot.val(); // Promise ile veriyi döndür
+      } else {
+        console.log('Veri bulunamadı.');
+        return null;
+      }
+    })
+    .catch((error) => {
+      console.error('Veri alma hatası:', error);
+      return null;
+    });
+};
 
 window.writeData = function writeData(dataname, writtenData) {
-	var DataRef = ref(database, dataname);
+	var DataRef = ref(database, "SDTdata/client/" + dataname);
+	
+	set(DataRef, writtenData)
+	.then(() => {
+		console.log("Veri başarıyla yazıldı.");
+	})
+	.catch((error) => {
+		console.error("Veri yazma hatası:", error);
+	});
 }
+
+window.checkUserOnline = function checkUserOnline(userId) {
+    const userStatusRef = ref(database, `users/${userId}/status`);
+    
+    onValue(userStatusRef, (snapshot) => {
+        if (snapshot.exists()) {
+            console.log(`Kullanıcı durumu: ${snapshot.val()}`);
+        } else {
+            console.log("Kullanıcı bilgisi bulunamadı.");
+        }
+    });
+}
+
+
+
+
 
     </script>
 
@@ -245,99 +276,27 @@ window.writeData = function writeData(dataname, writtenData) {
 
 		<div class="fixed_menu_space"></div>
 		<div class="main_container_login">
-		<div class="main_container">
-		<div class="main_container_outer">
-			<div class="main_menu_content_outer">
-						<div class="main_container_inner_text">
-							 <h2>LOGIN</h2>
-						</div>
-						
-		<label for="username">Kullanıcı Adı:</label>
-		  <input type="email" id="username" placeholder="E-posta" required />
-		  <br />
-		  <label for="password">Şifre:</label>
-		  <input type="password" id="password" placeholder="Şifre" required />
-		  <br />
-		  <button type="submit" style="cursor: pointer;" onClick="logintofirebase()">Giriş Yap</button>
-					</div>
-		</div>
-		</div>
-		</div>
-
-		<div class="main_menu_outer_div main_page_1" style="display: none;">
-			<div class="main_left_div">
-				<div class="button_part">
-					<!--<div class="button_des1_outer mapping_btn"><div class="button_des1_inner">MAPPING</div></div>
-					<div class="button_des1_outer str_msn_btn"><div class="button_des1_inner">START MISSION</div></div>
-					<div class="button_des1_outer stop_msn_btn"><div class="button_des1_inner">STOP MISSION</div></div>-->
-					<button class="button_des2_outer mapping_btn" role="button" onclick="mapping()">
-						<div class="button_des2_shadow"></div>
-						<div class="button_des2_edge"></div>
-						<div class="button_des2_front"><i class="fa fa-map" style="font-size: 20px;"></i></div>
-					</button>
-					<button class="button_des2_outer str_msn_btn" role="button" onclick="startMission()">
-						<div class="button_des2_shadow"></div>
-						<div class="button_des2_edge"></div>
-						<div class="button_des2_front"><i class="fa fa-play" style="font-size: 20px;"></i></div>
-					</button>
-					<button class="button_des2_outer stop_msn_btn" role="button" onclick="stopMission()">
-						<div class="button_des2_shadow"></div>
-						<div class="button_des2_edge"></div>
-						<div class="button_des2_front"><i class="fa fa-stop" style="font-size: 20px;"></i></div>
-					</button>
-				</div>
-				
-				<div class="info_robot_part">25%
-					<div class="div_charge_bar_outer"><div class="div_charge_bar_inner"></div></div>
-					<div class="current_coord_text_outer">Current:<div class="current_coord_text">X: 20 Y: 35</div></div>
-					<div class="new_coord_text_outer">New:<div class="new_coord_text">X: 20 Y: 35</div></div>
-				</div>
-				
-				<div class="manuel_control_part_outer">
-					<div class="manuel_control_part_outer_left">
-						<div class="manuel_control_turn_outer">
-							<div class="manuel_control_turn_btn" onclick="buttonStateChanged('q', false)" onmousedown="buttonStateChanged('q', true)"><div class="manuel_control_turn_letter">Q</div></div>
-							<div class="manuel_control_turn_btn" onclick="buttonStateChanged('e', false)" onmousedown="buttonStateChanged('e', true)"><div class="manuel_control_turn_letter">E</div></div>
-						</div>
-						<div class="manuel_control_directions">
-							<div class="manuel_control_dir_letter">
-								<div class="manuel_control_go_letter"><div class="manuel_control_turn_btn" onclick="buttonStateChanged('w', false)" onmousedown="buttonStateChanged('w', true)"><div class="manuel_control_turn_letter">W</div></div></div>
-								<div class="manuel_control_center_letters"><div class="manuel_control_go_letter" style="width: unset;"><div class="manuel_control_turn_btn"  onclick="buttonStateChanged('a', false)" onmousedown="buttonStateChanged('a', true)"><div class="manuel_control_turn_letter">A</div></div></div>
-								<div class="manuel_control_go_letter" style="width: unset;"><div class="manuel_control_turn_btn"  onclick="buttonStateChanged('d', false)" onmousedown="buttonStateChanged('d', true)"><div class="manuel_control_turn_letter">D</div></div></div></div>
-								<div class="manuel_control_go_letter"><div class="manuel_control_turn_btn"  onclick="buttonStateChanged('s', false)" onmousedown="buttonStateChanged('s', true)"><div class="manuel_control_turn_letter">S</div></div></div>
+			<div class="main_container">
+				<div class="main_container_outer">
+					<div class="main_menu_content_outer">
+								<div class="main_container_inner_text">
+									 <h2>LOGIN</h2>
+								</div>
+								
+				<label for="username">Kullanıcı Adı:</label>
+				  <input type="email" id="username" placeholder="E-posta" required />
+				  <br />
+				  <label for="password">Şifre:</label>
+				  <input type="password" id="password" placeholder="Şifre" required />
+				  <br />
+				  <button type="submit" style="cursor: pointer;" onClick="logintofirebase()">Giriş Yap</button>
 							</div>
-						</div>
-					</div>
-					
-					<div class="manuel_control_part_outer_right">
-						<div class="manuel_control_lift_outer">
-							<div class="manuel_control_turn_btn" onclick="buttonStateChanged('r', false)" onmousedown="buttonStateChanged('r', true)"><div class="manuel_control_turn_letter">R</div></div>
-							<div class="manuel_control_turn_btn" onclick="buttonStateChanged('f', false)" onmousedown="buttonStateChanged('f', true)"><div class="manuel_control_turn_letter">F</div></div>
-						</div>
-					</div>
-					
-					
-				</div>
-			</div>
-			<div class="main_right_div">
-				<div class="car_image_div">
-					<image src="https://sonarcar.engrare.com/files/photos/sonar_car_image.png" height="100%" width="100%" class="sonar_car_img" />
-				</div>
-				<div class="location_image_div">
-					<image src="https://sonarcar.engrare.com/files/photos/location_mark_icon.png" height="100%" width="100%" class="location_mark_img" />
-				
 				</div>
 			</div>
 		</div>
+<!--file-data-written-starting-place-->
+<div id="placeholder"></div>
 		
-		<div class="main_menu_outer_div main_page_2" style="display: none;">
-		</div>
-		
-		<div class="main_menu_outer_div main_page_3" style="display: none;">
-		</div>
-		
-		<div class="main_menu_outer_div main_page_4" style="display: none;">
-		</div>
 		
 	<div class="copywrite_part">
 <p class="copywrite_text">Bu websitesinin tüm hakları Kaya Sertel ve <b>Engrare©®™</b> ekibine aittir. 3. kişilerin kullanımına kapalıdır.</p>
