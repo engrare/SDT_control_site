@@ -201,14 +201,15 @@ p {
 }
 
 .button_des2_front {
-  display: block;
+  display: flex;
+  align-items: center;
   position: relative;
   padding: 6px 16px;
   border-radius: 12px;
   font-size: 0.8rem;
   border: 2px solid #877657;
-  color: white;
-  background: #a5b72b;
+  color: black;
+  background: #e5c13d;
   will-change: transform;
   transform: translateY(-4px);
   transition:
@@ -261,10 +262,20 @@ p {
 
 .button_part {
 	display: flex;
-	flex-direction: row;
-    align-items: center;
-	justify-content: space-around;
+	flex-direction: column;
 	width: 100%;
+}
+
+.button_top_part_div {
+	margin-bottom: 20px;
+	width: 100%;
+	display: flex;
+	justify-content: space-evenly;
+}
+
+.button_bottom_part_div {
+	display: flex;
+	justify-content: space-evenly;
 }
 
 .info_robot_part {
@@ -272,22 +283,61 @@ p {
 	align-items: center;
 	justify-content: space-around;
     width: 100%;
+	color: black;
 }
 
-.div_charge_bar_outer {
-	background: #8d7752;
-	height: 15px;
-	width: 120px;
-	margin: 0px 30px;
-	border: 3px solid #3f3625;
-	border-radius: 10px;
+.scenario_outer_div {
+	display: flex;
+    flex-direction: column;
+    align-items: center;
+	border-style: solid;
+	border-radius: 5px;
 }
 
-.div_charge_bar_inner {
-	height: 15px;
-	background: white;
-	width: 25%;
-	border-radius: 10px;
+.scenario_selector_outer_div {
+	display: flex;
+	font-size: 19px;
+	margin: 3px;
+}
+
+.scenario_selector_div {
+	display: flex;
+	width: 30px;
+	height: 30px;
+	border-style: solid;
+	align-items: center;
+    justify-content: center;
+	cursor: pointer;
+	border-radius: 5px;
+	margin: 0px 2px 0px 2px;
+}
+
+.scenario_selector_div:hover {
+	background: black;
+	color: white;
+}
+
+.scenario_selector_div_selected {
+	background: #e5c13d !important;
+	color: black !important;
+	cursor: unset;
+}
+
+.slider-container {
+	display: flex;
+	flex-direction: column;
+    align-items: center;
+}
+input[type="range"] {
+	width: 100%;
+	cursor: grab;
+}
+input[type="range"]:active {
+	cursor: grabbing;
+}
+.speed-value {
+	font-size: 20px;
+	margin-top: 10px;
 }
 
 .manuel_control_part_outer {
@@ -320,7 +370,7 @@ p {
 	width: 300px;
 	background: white;
 	border-radius: 200px;
-	margin: 0px 50px 50px 50px;
+	margin: 0px 50px 0px 50px;
 }
 
 .manuel_control_turn_outer {
@@ -380,32 +430,6 @@ p {
 /*clip-path: polygon(50% 0%, 0% 100%, 100% 100%);*/
 
 
-.car_image_div {
-	position: relative;
-	left: 20px;
-	top: 50px;
-	width: calc(1.361 * 50px);
-	height: 50px;
-}
-
-.sonar_car_img {
-	transform: rotate(180deg);
-}
-
-.location_image_div {
-	position: relative;
-	left: 50px;
-	top: 80px;
-	cursor: all-scroll;
-	height: 40px;
-	width: 40px;
-	  
-}
-
-.location_mark_img {
-	display: block;
-	max-width: 100%;
-}
 
 
 @keyframes button_background_hover_ani {
@@ -746,6 +770,10 @@ p {
 		margin: 6px 8px;
 	}
 	
+	.main_menu_outer_div {
+		height: calc(100vh - 80px);
+	}
+	
 	.fixed_menu_top {
 		height: 55px;
 	}
@@ -958,33 +986,216 @@ p {
 
 .main_div {
 	width: 100%;
-	overflow-x: hidden;
+	overflow: hidden;
 	height: auto;
 	position: relative;
 	z-index: 0;
+	display: flex;
+    flex-direction: column;
 }
 
 .main_menu_outer_div {
 	display: flex;
-	height: 100vh;
+	height: calc(100vh - 120px);
+}
+
+.page_2_main_left_div {
+	display: flex;
+	width: 40%;
+	height: 100%;
+	background: #c8a877;
+	align-items: center;
+    justify-content: center;
+}
+
+.page_2_main_right_div {
+	display: flex;
+	width: 60%;
+	height: 100%;
+	background: #aaedf6;
+	color: black;
+	align-items: center;
+    justify-content: center;
+    flex-direction: column;
+}
+
+.car_data_show_div {
+	border-radius: 10px;
+	height: 80px;
+	width: 200px;
+	background: #ffc80054;
+	border-style: solid;
+	margin-left: 20px;
+	display: flex;
+	align-items: center;
+    justify-content: space-evenly;
+}
+
+.device_data_value_text {
+	font-size: 20px;
+    margin: 3px;
+}
+
+.device_data_type_text {
+	font-weight: 900;
+    font-size: 21px;
+    margin: 3px;
+}
+
+.car_text_data_icon_i {
+    font-size: 35px;
+}
+
+.car_data_row_div {
+	display: flex;
+	margin-top: 20px;
+}
+
+.page_2_photo_img {
+	width: 80%;
 }
 
 .main_left_div {
+	resize: horizontal;
 	display: flex;
-	width: 30%;
+	width: 35%;
 	height: 100%;
 	background: #c8a877;
 	align-items: center;
 	justify-content: space-around;
     flex-direction: column;
+	overflow: auto;
 }
 
 .main_right_div {
-	width: 70%;
+	display: flex;
+	width: 65%;
 	height: 100%;
-	background: #aaedf6;
 	color: black;
 	overflow: hidden;
+	flex-direction: column;
+}
+
+.main_right_top_div {
+	resize: vertical;
+	overflow: auto;
+	background: #aaedf6;
+	width: 100%;
+	height: 70%;
+	display: flex;
+	justify-content: center;
+    align-items: center;
+}
+
+.map_outer_div {
+	height: calc(100% - 100px);
+	width: calc(100% - 200px);
+	border-style: solid;
+	border-radius: 15px;
+}
+
+.map_side_menu_div {
+	height: 100%;
+	width: 100px;
+	display: flex;
+	flex-direction: column;
+    align-items: center;
+    justify-content: space-evenly;
+	margin-left: 20px;
+}
+
+.map_side_button_div {
+	display: flex;
+	flex-direction: column;
+    align-items: center;
+	height: 100px;
+	width: 100px;
+	border-style: solid;
+	border-radius: 15px;
+	justify-content: space-evenly;
+}
+
+.main_right_bottom_div {
+	width: 100%;
+	height: 30%;
+	background: #c8a877;
+	overflow: auto;
+	display: flex;
+	justify-content: space-evenly;
+}
+
+.text_data_outer_div {
+	display: flex;
+	height: 100%;
+	flex-direction: column;
+    justify-content: space-evenly;
+	margin-left: 20px;
+	
+}
+
+.graph_data_outer_div {
+	width: 400px;
+	height: 100%;
+}
+
+.graph_data_inner_div {
+	height: 100%;
+	display: flex;
+	align-items: center;
+	overflow: hidden;
+	
+}
+
+.speed_graph_div {
+	position: relative;
+	left: -50px;
+}
+
+.power_graph_div {
+	position: relative;
+	left: -150px;
+}
+
+.text_data_liner_div {
+	display: flex;
+	
+}
+
+.text_data_show_div {
+	border-radius: 10px;
+	height: 70px;
+	width: 150px;
+	background: #ffc80054;
+	border-style: solid;
+	margin-left: 20px;
+	display: flex;
+	align-items: center;
+    justify-content: space-evenly;
+}
+
+.text_data_type_text {
+	font-weight: 900;
+	font-size: 17px;
+	margin: 3px;
+}
+
+.text_data_value_text {
+	font-size: 15px;
+	margin: 3px;
+}
+
+.text_data_icon_i {
+	font-size: 30px;
+}
+
+.mission_button_icon_i {
+	font-size: 25px;
+	
+}
+
+.mission_button_text_p {
+	font-size: 20px;
+	margin: 0px 0px 0px 10px;
 }
 
 .main_menu_content_outer {
