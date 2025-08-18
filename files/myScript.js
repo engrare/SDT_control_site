@@ -449,7 +449,6 @@ $(".text_data_value_text:eq(2)").text(Math.floor(mission_sec / 60).toString().pa
 $(".text_data_value_text:eq(3)").text(randomTemp + "°C");
 $(".text_data_value_text:eq(4)").text(randomCurrent + " Amper");
 $(".text_data_value_text:eq(5)").text(randomVoltage + " Volt");
-$(".haritammm").text(randomVoltage + " Volt");
 
 			/*$(".div_charge_bar_inner").css("width", red_data.battery_percent + "%");
 			$(".battery_power_perc").text(red_data.battery_percent + "%");
