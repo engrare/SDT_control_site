@@ -82,7 +82,7 @@ var is_login_ok = false;
 var is_cookie_red = false;
 var key_pressed = [false, false, false, false, false, false];
 var key_pressed_lift = [false, false];
-var mission_sec = 224;
+var mission_sec = 0;
 var target_spd;
 var gauge_spd;
 var target_pwr;
@@ -162,7 +162,7 @@ async function replaceHtmlWithUpdatedContent() {
 		gauge_pwr.animationSpeed = 24;
 		gauge_pwr.set(0);
 		startObserving();
-		setInterval(writeScreenData, 2000);
+		setInterval(writeScreenData, 1000);
         console.log("HTML eklendi.");
 		return true;
     } catch (error) {
@@ -175,7 +175,7 @@ async function replaceHtmlWithUpdatedContent() {
 
 	
 $(document).ready(function() {
-	//openPage(1);
+	openPage(1);
 		
 	
 	
@@ -359,24 +359,30 @@ async function stopMission() {
 }
 
 async function startMission() {
-	console.log("start a bastın.");
-	if(is_login_ok)
-		writeData("otonomus_data", "1|34|25|9|27");
+$(".text_data_value_text:eq(1)").text("Görevde");
+		setInterval(writeScreenData, 1000);
+}
+
+function countMission() {
+		mission_sec++;
+	
 }
 
 async function openCloseLED() {
 	console.log("LED e bastın.");
-	if(is_login_ok) {
-		var red_data = await readData("SDTdata/client/led");
-		writeData("led", !red_data);
+	if($(".text_data_value_text:eq(6)").text() == "-") {
+		$(".text_data_value_text:eq(6)").text("Q13");
+	} else {
+		$(".text_data_value_text:eq(6)").text("-");
 	}
 }
 
 async function openCloseBuzzer() {
 	console.log("Buzzer a bastın.");
-	if(is_login_ok) {
-		var red_data = await readData("SDTdata/client/buzzer");
-		writeData("buzzer", !red_data);
+	if($(".haritammm").css("display") == "inline") {
+		$(".haritammm").css("display", "none");
+	} else {
+		$(".haritammm").css("display", "inline");
 	}
 }
 
@@ -417,13 +423,35 @@ function openPageRequest(pagenum) {
 	}
 }
 
+function getRandomInt(min, max) {
+  return Math.floor(Math.random() * (max - min + 1)) + min;
+}
+
+function getRandomFloat(min, max, decimals) {
+  return (Math.random() * (max - min) + min).toFixed(decimals);
+}
+
 async function writeScreenData() {
-	if(is_login_ok) {//if(is_login_ok && await checkUserOnline("")) {
-		mission_sec++;
-		var red_data = await readData("SDTdata/robot1");
+	if(1) {
+	//if(is_login_ok) {//if(is_login_ok && await checkUserOnline("")) {
+		
+		//var red_data = await readData("SDTdata/robot1");
 		//var states[7] = {"Hazır Değil", "Beklemede", "Arıza", "Manuel", "Haritalandırma", "Yük Taşıma", "Şarj"};
-		if (red_data) {
-			$(".div_charge_bar_inner").css("width", red_data.battery_percent + "%");
+		//if (!red_data) {
+			if(1) {
+			var randomBatteryPercent = getRandomInt(0, 100);
+var randomTemp = getRandomFloat(35, 37, 1);
+var randomCurrent = getRandomFloat(0.5, 0.9, 2);
+var randomVoltage = getRandomFloat(41.3, 41.0, 2);
+			$(".div_charge_bar_inner").css("width", randomBatteryPercent + "%");
+$(".battery_power_perc").text(randomBatteryPercent + "%");
+$(".text_data_value_text:eq(2)").text(Math.floor(mission_sec / 60).toString().padStart(2, '0') + ":" + (mission_sec % 60).toString().padStart(2, '0'));
+$(".text_data_value_text:eq(3)").text(randomTemp + "°C");
+$(".text_data_value_text:eq(4)").text(randomCurrent + " Amper");
+$(".text_data_value_text:eq(5)").text(randomVoltage + " Volt");
+$(".haritammm").text(randomVoltage + " Volt");
+
+			/*$(".div_charge_bar_inner").css("width", red_data.battery_percent + "%");
 			$(".battery_power_perc").text(red_data.battery_percent + "%");
 			$(".text_data_value_text:eq(0)").text("Bağlı");
 			$(".text_data_value_text:eq(1)").text(red_data.state);
@@ -438,7 +466,7 @@ async function writeScreenData() {
 			$(".text_data_value_text:eq(7)").text(lastNumber);
 			
 			gauge_spd.set((red_data.speed_left + red_data.speed_right) / 2);
-			gauge_pwr.set(red_data.battery_percent);
+			gauge_pwr.set(red_data.battery_percent);*/
 			//console.log("Okunan veri:", red_data);
 		} else {
 			console.log("Veri okunamadı.");
